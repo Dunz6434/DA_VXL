@@ -1,0 +1,20 @@
+p“ ÿaA51 "STARTUP.A51" SET(SMALL) DEBUG PRINT(.\Listings\STARTUP.lst) OBJECT(.\Objects\STARTUP.obj) EP  ®f.\Objects\STARTUP.obj ÔTà^STARTUP.A51 –p„ ÿXA51 "main.asm" SET(SMALL) DEBUG PRINT(.\Listings\main.lst) OBJECT(.\Objects\main.obj) EP  ®f.\Objects\main.obj ÿ­f	main.asm pˆ ÿBL51 @.\Objects\DoAnVXL.lnp   ®f.\Objects\DoAnVXL ®f.\Objects\DoAnVXL.lnp ®f.\Objects\STARTUP.obj ®f.\Objects\main.objO 
+?C_STARTUPÿ Ó
+  
+?C_STARTUPÅ$    
+STARTUP.A51¹"!     
+?C_C51STARTUP   ?STACK#"      
+?C_STARTUP­"  à  ACC ð  B ƒ  DPH ‚  DPL    IBPSTACK   
+IBPSTACKTOP €  IDATALEN   	IDATALOOP    PBPSTACK   
+PBPSTACKTOP    PDATALEN    
+PDATASTART    PPAGE    
+PPAGEENABLE    	PPAGE_SFR   SP    STARTUP1    XBPSTACK    
+XBPSTACKTOP    XDATALEN    
+XDATASTARTï      é"     ~ V   xäöØýu   ="    …  †  ‡  ˆ  ¹  	Ä Ü
+ 
+?C_STARTUPÂ   MAINÀ$
+    main.asm³"«   Œ  BACKWARD    	BTN_RIGHT  _  CONTROL_TURN  ž  DELAY ¯  EA   ENA •  ENB ©  ET0 «  ET1  }  EXIT  •   FORWARD ´  IR     L0  ¢  L1    MAIN  ;  	MAIN_LOOP ‘  	MOTOR_IN1 ’  	MOTOR_IN2 “  	MOTOR_IN3 ”  	MOTOR_IN4  K  NT0A  X  NT0B  O  NT1A  \  NT1B   P1    P2 °  P3 0  	PWM_DUTYA 1  	PWM_DUTYB  E  RUN1  R  RUN2 Œ  TH0   TH1 ‰  TMOD Œ  TR0 Ž  TR1  o  	TURN_LEFT  w  
+TURN_RIGHTo    €Y"      Æ  
+ €81"   
+  ¹”   €5u° u0#u1#Ò¯Ò©Ò«u‰"uŒœuœÒŒÒŽž ´!u°ÿ•€ö¿d ïµ0 ’2¿d ïµ1 ’•2u0#u1#ŒÂ² ´ý0 u0 u1#€u0#u1 •ž ´Ûu0#u1#€¯Â‘Ò’²“Ò”"Ò‘Â’Ò“Â”"{|ú}úÝþÜúÛö""G           #   &   (   *   ,   /   2   5   7   9    ; "  > #  A $  C %  E (  F )  I *  K ,  L -  O .  Q /  R 2  S 3  V 4  X 6  Y 7  \ 8  ^ 9  _ <  b =  e >  g ?  i @  l A  o C  r D  u E  w G  z H  } J   K   L  „ M  ‡ N  Š O  Œ R  Ž S   T  ’ U  ” V  • Y  — Z  ™ [  › \   ]  ž `    a  ¢ b  ¤ c  ¦ d  ¨ e  ª f ¹  MAIN½ 
+?C_STARTUP   Í
