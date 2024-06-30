@@ -1,0 +1,169 @@
+A51 MACRO ASSEMBLER  MAIN                                                                 06/29/2024 13:47:54 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.2.7.0
+OBJECT MODULE PLACED IN .\Objects\main.obj
+ASSEMBLER INVOKED BY: D:\KeliV5\C51\BIN\A51.EXE main.asm SET(SMALL) DEBUG PRINT(.\Listings\main.lst) OBJECT(.\Objects\ma
+                      in.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+  0091                 1     MOTOR_IN1  BIT P1.1 ; Chân Input 1 Motor A
+  0092                 2     MOTOR_IN2  BIT P1.2 ; Chân Input 2 Motor A
+  0093                 3     MOTOR_IN3  BIT P1.3 ; Chân Input 3 tor B
+  0094                 4     MOTOR_IN4  BIT P1.4 ; Chân Input 4 Motor B
+  0090                 5     ENA BIT P1.0 ; Chân bam xung A
+  0095                 6     ENB BIT P1.5 ; Chân bam xung B
+  00B4                 7     IR BIT P3.4 ;TÍN HIEU HONG NGOAI
+  REG                  8     COUNT_INT EQU R7 ;bien dem 
+  0030                 9     PWM_DUTYA EQU 30h
+  0031                10     PWM_DUTYB EQU 31h
+  00A0                11     BTN_RIGHT BIT P2.0 ;nut nhan chon che do re huong
+                      12     
+0000                  13     ORG 0000h 
+0000 801B             14             JMP MAIN
+000B                  15     ORG 000BH ; ngat Timer 0 dieu khien chân bam xung A 
+000B 8038             16             JMP RUN1 
+001B                  17     ORG 001BH ; ngat Timer 1 dieu khien chân bam xung B
+001B 8035             18             JMP RUN2
+                      19     
+001D                  20     MAIN:
+001D 75B000           21             MOV P3, #0D
+0020 753023           22             MOV PWM_DUTYA, #35 ; cho toc do ban dau cua motor ben trai la 35
+0023 753123           23             MOV PWM_DUTYB, #35 ; cho toc do ban dau cua motor ben phai la 35
+0026 D2AF             24             SETB EA
+0028 D2A9             25             SETB ET0
+002A D2AB             26             SETB ET1
+002C 758922           27             MOV TMOD, #22H ; Timer 0 va Timer 1 che do tu dong nap lai
+002F 758C9C           28             MOV TH0, #(-100)
+0032 758D9C           29             MOV TH1, #(-100)
+0035 D28C             30             SETB TR0
+0037 D28E             31             SETB TR1
+0039 119E             32             CALL DELAY
+003B                  33             MAIN_LOOP:
+003B 20B421           34             JB IR, CONTROL_TURN ; neu tin hieu hong ngoai = 1 thi nhay toi ham dieu khien re
+003E 75B0FF           35             MOV P3, #0FFH
+0041 1195             36             CALL FORWARD
+0043 80F6             37             JMP MAIN_LOOP
+                      38             
+0045                  39     RUN1:
+0045 0F               40             INC COUNT_INT
+0046 BF6402           41             CJNE COUNT_INT, #100, NT0A
+0049 7F00             42             MOV COUNT_INT, #0
+004B                  43             NT0A:
+004B EF               44                     MOV A, COUNT_INT
+004C B53000           45                     CJNE A, PWM_DUTYA, NT1A
+004F 9290             46             NT1A:MOV ENA, C
+0051 32               47     RETI
+                      48     
+0052                  49     RUN2:
+0052 0F               50             INC COUNT_INT
+0053 BF6402           51             CJNE COUNT_INT, #100, NT0B
+0056 7F00             52             MOV COUNT_INT, #0
+0058                  53             NT0B:
+0058 EF               54                     MOV A, COUNT_INT
+0059 B53100           55                     CJNE A, PWM_DUTYB, NT1B
+005C 9295             56             NT1B:MOV ENB, C
+005E 32               57     RETI
+A51 MACRO ASSEMBLER  MAIN                                                                 06/29/2024 13:47:54 PAGE     2
+
+                      58     
+005F                  59     CONTROL_TURN: ; ham dieu khien re
+005F 753023           60             MOV PWM_DUTYA, #35
+0062 753123           61             MOV PWM_DUTYB, #35
+0065 118C             62             CALL BACKWARD 
+0067 C2B2             63             CLR P3.2
+0069 20B4FD           64             JB IR, $ ; neu tin hieu hong ngoai = 1 thi xe tiep tuc lui
+006C 30A008           65             JNB BTN_RIGHT, TURN_RIGHT ; neu nut re phai duoc nhan thi nhay toi ham re phai
+006F                  66             TURN_LEFT: ;hàm re trái
+006F 753000           67             MOV PWM_DUTYA, #0
+0072 753123           68             MOV PWM_DUTYB, #35
+0075 8006             69             JMP EXIT
+0077                  70             TURN_RIGHT: ;hàm re phai
+0077 753023           71             MOV PWM_DUTYA, #35
+007A 753100           72             MOV PWM_DUTYB, #0
+007D                  73             EXIT:
+007D 1195             74             CALL FORWARD
+007F 119E             75             CALL DELAY
+0081 20B4DB           76             JB IR, CONTROL_TURN
+0084 753023           77             MOV PWM_DUTYA, #35
+0087 753123           78             MOV PWM_DUTYB, #35 
+008A 80AF             79             JMP MAIN_LOOP
+                      80             
+008C                  81     BACKWARD: ; ham xe chay lui
+008C C291             82        CLR MOTOR_IN1
+008E D292             83        SETB MOTOR_IN2
+0090 B293             84        CPL MOTOR_IN3
+0092 D294             85        SETB MOTOR_IN4
+0094 22               86     RET
+                      87     
+0095                  88     FORWARD: ; ham xe chay toi
+0095 D291             89        SETB MOTOR_IN1
+0097 C292             90        CLR MOTOR_IN2
+0099 D293             91        SETB MOTOR_IN3
+009B C294             92        CLR MOTOR_IN4
+009D 22               93     RET
+                      94     
+009E                  95     DELAY: ; ham delay 0.25s
+009E 7B02             96        MOV R3, #2
+00A0 7CFA             97        L0:MOV R4, #250
+00A2 7DFA             98        L1:MOV R5, #250
+00A4 DDFE             99        DJNZ R5, $
+00A6 DCFA            100        DJNZ R4, L1
+00A8 DBF6            101        DJNZ R3, L0
+00AA 22              102     RET
+                     103     
+                     104     END
+A51 MACRO ASSEMBLER  MAIN                                                                 06/29/2024 13:47:54 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+BACKWARD . . . . .  C ADDR   008CH   A   
+BTN_RIGHT. . . . .  B ADDR   00A0H.0 A   
+CONTROL_TURN . . .  C ADDR   005FH   A   
+COUNT_INT. . . . .    REG    R7          
+DELAY. . . . . . .  C ADDR   009EH   A   
+EA . . . . . . . .  B ADDR   00A8H.7 A   
+ENA. . . . . . . .  B ADDR   0090H.0 A   
+ENB. . . . . . . .  B ADDR   0090H.5 A   
+ET0. . . . . . . .  B ADDR   00A8H.1 A   
+ET1. . . . . . . .  B ADDR   00A8H.3 A   
+EXIT . . . . . . .  C ADDR   007DH   A   
+FORWARD. . . . . .  C ADDR   0095H   A   
+IR . . . . . . . .  B ADDR   00B0H.4 A   
+L0 . . . . . . . .  C ADDR   00A0H   A   
+L1 . . . . . . . .  C ADDR   00A2H   A   
+MAIN . . . . . . .  C ADDR   001DH   A   
+MAIN_LOOP. . . . .  C ADDR   003BH   A   
+MOTOR_IN1. . . . .  B ADDR   0090H.1 A   
+MOTOR_IN2. . . . .  B ADDR   0090H.2 A   
+MOTOR_IN3. . . . .  B ADDR   0090H.3 A   
+MOTOR_IN4. . . . .  B ADDR   0090H.4 A   
+NT0A . . . . . . .  C ADDR   004BH   A   
+NT0B . . . . . . .  C ADDR   0058H   A   
+NT1A . . . . . . .  C ADDR   004FH   A   
+NT1B . . . . . . .  C ADDR   005CH   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+P3 . . . . . . . .  D ADDR   00B0H   A   
+PWM_DUTYA. . . . .  N NUMB   0030H   A   
+PWM_DUTYB. . . . .  N NUMB   0031H   A   
+RUN1 . . . . . . .  C ADDR   0045H   A   
+RUN2 . . . . . . .  C ADDR   0052H   A   
+TH0. . . . . . . .  D ADDR   008CH   A   
+TH1. . . . . . . .  D ADDR   008DH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR0. . . . . . . .  B ADDR   0088H.4 A   
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+TURN_LEFT. . . . .  C ADDR   006FH   A   
+TURN_RIGHT . . . .  C ADDR   0077H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
